@@ -4,22 +4,6 @@ walkabout
 
 paper = Raphael "paper", 500, 500
 
-Function::get = (name, f) ->
-  Object.defineProperty @::, name,
-    configurable: true
-    enumerable: true
-    get: f
-
-Function::set = (name, f) ->
-  Object.defineProperty @::, name,
-    configurable: true
-    enumerable: true
-    set: f
-
-Math.truncate = (x, precision = 0) ->
-  scale = [1, 10, 100, 1000, 10000, 100000, 1000000][precision]
-  Math.round(x * scale) / scale
-
 message = (text, x = paper.width / 2, y = 40) ->
   el = paper.text(x, y - 10, text).attr({'fill': '#fff', 'font': '12px Consolas'})
   oncomplete = ->
