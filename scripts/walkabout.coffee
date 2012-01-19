@@ -67,9 +67,7 @@ class Obstacle extends Base
     @poly.forEach (p, i, poly) ->
       p.left = poly[(i-1 + poly.length) % poly.length]
       p.right = poly[(i+1) % poly.length]
-      u = [p[0] - p.left[0], p[1] - p.left[1]]
-      v = [p.right[0] - p[0], p.right[1] - p[1]]
-      p.internal = Math.atan2(u[0]*v[1] - v[0]*u[1], u[0]*v[0] + u[1]*v[1]) <= 0
+      p.internal = Geom.angle(p.left, p, p.right) <= 0
 
   @get 'vertices', ->
     offset = @offset
@@ -115,22 +113,6 @@ target.repr.attr {
 
 ### ###
 
-intersect = (u1, v1, u2, v2) ->
-  denom = (v1[0] - u1[0])*(v2[1] - u2[1]) - (v1[1] - u1[1])*(v2[0] - u2[0])
-  if denom == 0 # line segments are parallel
-    #console.log u1, v1, "parallel to", u2, v2
-    return undefined
-  num1 = (u1[1] - u2[1])*(v2[0] - u2[0]) - (u1[0] - u2[0])*(v2[1] - u2[1])
-  num2 = (u1[1] - u2[1])*(v1[0] - u1[0]) - (u1[0] - u2[0])*(v1[1] - u1[1])
-  r = num1 / denom
-  s = num2 / denom
-  if 0 < r < 1 and 0 < s < 1
-    #console.log u1, v1, "intersects", u2, v2
-    return [u1[0] + r * (v1[0] - u1[0]), u1[1] + r * (v1[1] - u1[1])]
-  else
-    #console.log u1, v1, "misses", u2, v2
-    return undefined
-
 decorators = paper.set()
 recalculate = ->
   decorators.forEach (i) -> i.remove() or true
@@ -165,7 +147,7 @@ recalculate = ->
           continue
       else
         continue
-      if edges.some((edge) -> intersect(edge[0], edge[1], u, v))
+      if edges.some((edge) -> Geom.intersect(edge[0], edge[1], u, v))
         continue
       links.push [u, v]
 

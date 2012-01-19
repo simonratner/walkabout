@@ -1,3 +1,7 @@
+###
+Functional primitives and utilities
+###
+
 # define a getter method for property `name`
 Function::get = (name, f) ->
   Object.defineProperty @::, name,
