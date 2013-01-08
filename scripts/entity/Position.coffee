@@ -1,7 +1,11 @@
-# Entity position
-class Position
-  constructor: (@position) ->
+# Position
+class Position extends Array
+  constructor: (position) ->
+    @replace(position)
+
+  replace: (position) ->
+    @length = 0
+    @push.apply(@, position)
 
 # Exports
-(exports ? @ ? window).entity ?= {}
-(exports ? @ ? window).entity.Position = Position
+(exports ? @.entity ?= {}).Position = Position
