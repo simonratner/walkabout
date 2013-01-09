@@ -53,7 +53,7 @@ Store =
 
   from_components: (components...) ->
     ### Create new entity from specified components. ###
-    @add @_next_entity_id, components...
+    @add String(@_next_entity_id), components...
     String(@_next_entity_id++)
 
   from_template: (template_name, args...) ->

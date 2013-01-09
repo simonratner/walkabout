@@ -20,7 +20,7 @@ class Drag
           Math.min(Math.max(dragy + dy, -box.y), paper.height - box.y - box.height)
         ]
         entity.Store.get(ent, entity.Position)?.replace(offset)
-        emit('update')
+        emit('update', ent, offset)
       component.el.drag dragmove, dragstart, dragend, component, component, component
       component.el.attr {
         'cursor': 'hand'

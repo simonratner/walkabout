@@ -47,25 +47,25 @@ class Path
         links.push [u, v]
 
     # anchor start and end nodes
-    ###
     anchors = []
-    for u in [start.offset, end.offset]
-      for v in vertices
-        if (u[0] - v[0]) != 0
-          [m, y0] = Geom.line(u, v)
-          y_v1 = Math.round_to(m * v.left[0] + y0, 6)
-          y_v2 = Math.round_to(m * v.right[0] + y0, 6)
-          if (y_v1 < v.left[1] and y_v2 > v.right[1]) or (y_v1 > v.left[1] and y_v2 < v.right[1])
+    entity.Store.each entity.Position, '$sink', (ent, pos, sink) =>
+      for u in [pos, sink]
+        for v in vertices
+          if (u[0] - v[0]) != 0
+            [m, y0] = Geom.line(u, v)
+            y_v1 = Math.round_to(m * v.left[0] + y0, 6)
+            y_v2 = Math.round_to(m * v.right[0] + y0, 6)
+            if (y_v1 < v.left[1] and y_v2 > v.right[1]) or (y_v1 > v.left[1] and y_v2 < v.right[1])
+              continue
+          else if (u[1] - v[1]) != 0
+            if (v.left[0] < v[0] and v.right[0] > v[0]) or (v.left[0] > v[0] and v.right[0] < v[0])
+              continue
+          else
             continue
-        else if (u[1] - v[1]) != 0
-          if (v.left[0] < v[0] and v.right[0] > v[0]) or (v.left[0] > v[0] and v.right[0] < v[0])
+          if edges.some((edge) -> Geom.intersect(edge[0], edge[1], u, v))
             continue
-        else
-          continue
-        if edges.some((edge) -> Geom.intersect(edge[0], edge[1], u, v))
-          continue
-        anchors.push [u, v]
-    ###
+          anchors.push [u, v]
+
     console.log "Link density: ", links.length / vertices.length / vertices.length
 
     # draw them
@@ -74,7 +74,7 @@ class Path
       color = 'red' unless v.internal
       @paper.circle(v[0], v[1], 5).attr {'stroke': 'none', 'fill': color, 'fill-opacity': 0.5}
     @decorators.push @paper.path(links.map(([u, v]) -> "M#{u}L#{v}").join()).attr {'stroke': 'red', 'stroke-width': 2, 'stroke-opacity': 0.5}
-    #decorators.push paper.path(anchors.map(([u, v]) -> "M#{u}L#{v}").join()).attr {'stroke': 'yellow', 'stroke-width': 2, 'stroke-opacity': 0.5}
+    @decorators.push @paper.path(anchors.map(([u, v]) -> "M#{u}L#{v}").join()).attr {'stroke': 'red', 'stroke-width': 2, 'stroke-opacity': 0.5}
 
 # Exports
 (exports ? @.proc ?= {}).Path = Path
