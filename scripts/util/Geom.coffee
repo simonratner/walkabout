@@ -47,4 +47,4 @@ Geom =
       return undefined
 
 # Exports
-(exports ? @ ? window).Geom = Geom
+(exports ? this).Geom = Geom
