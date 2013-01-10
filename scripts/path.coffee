@@ -49,9 +49,9 @@ store.templates['obstacle'] = (pos, poly...) ->
 
 sink = store.from_template 'sink', [400, 400]
 actor = store.from_template 'actor', [100, 100], [400, 400]
-store.from_template 'obstacle', [100, 180], [0,0], [100,20], [50,50], [50,100], [-50,150], [20,100]
-store.from_template 'obstacle', [250, 120], [0,0], [100,0], [0,140]
-store.from_template 'obstacle', [200, 300], [0,0], [200,0], [200,50], [0,50]
+store.from_template 'obstacle', [110, 180], [0,0], [100,20], [50,50], [50,90], [-50,160], [20,100]
+store.from_template 'obstacle', [250, 120], [0,0], [60,0], [0,140]
+store.from_template 'obstacle', [180, 300], [0,0], [200,0], [200,50], [0,50]
 
 drag.on 'update', (ent, offset) ->
   if ent == sink
