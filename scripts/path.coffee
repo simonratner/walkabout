@@ -1,5 +1,5 @@
 
-paper = Raphael "paper", 500, 500
+paper = Raphael "paper", 501, 501
 
 message = (text, x = paper.width / 2, y = 40) ->
   el = paper.text(x, y - 10, text).attr({'fill': '#fff', 'font': '12px Consolas'})
@@ -22,18 +22,18 @@ path = new proc.Path(paper)
 store.templates['actor'] = (pos, sink) ->
   el = paper.circle(0.5, 0.5, 9)
             .attr
-              'fill': 'yellow'
+              'fill': '#6699ff'
               'fill-opacity': 0.1
-              'stroke': 'yellow'
+              'stroke': '#6699ff'
               'stroke-width': 1.5
   store.from_components new entity.Position(pos), new entity.Repr(el, pos), $sink: new entity.Position(sink)
 
 store.templates['sink'] = (pos) ->
   el = paper.circle(0.5, 0.5, 12)
             .attr
-              'fill': 'white'
+              'fill': '#6699ff'
               'fill-opacity': 0.1
-              'stroke': 'white'
+              'stroke': '#6699ff'
               'stroke-dasharray': '- '
               'stroke-width': 1
   store.from_components new entity.Position(pos), new entity.Repr(el, pos)
@@ -41,9 +41,9 @@ store.templates['sink'] = (pos) ->
 store.templates['obstacle'] = (pos, poly...) ->
   el = paper.path("M#{poly[0]}L#{poly[1..].join('L')}L#{poly[0]}")
             .attr
-              'fill': 'white'
+              'fill': '#999999'
               'fill-opacity': 0.1
-              'stroke': 'white'
+              'stroke': '#999999'
               'stroke-width': 1.5
   store.from_components new entity.Position(pos), new entity.Poly(poly), new entity.Repr(el, pos)
 

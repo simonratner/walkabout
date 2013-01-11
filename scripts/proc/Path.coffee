@@ -97,6 +97,7 @@ class Path
       while open.length > 0
         open.sort (a, b) -> b.f - a.f
         best = open.pop()
+        best.visited = true
         if best is sink
           break
         for n in best.neighbours
@@ -116,7 +117,7 @@ class Path
       console.timeEnd("build path")
       n = sink
       while n.parent?
-        @decorators.push @paper.path("M#{n}L#{n.parent}").attr {'stroke': 'red', 'stroke-width': 3, 'stroke-opacity': 0.5}
+        @decorators.push @paper.path("M#{n}L#{n.parent}").attr {'stroke': 'red', 'stroke-width': 1.5, 'stroke-opacity': 0.75}
         n = n.parent
 
     # draw them
@@ -127,8 +128,9 @@ class Path
           links.push [u, v]
     console.log("density:", links.length + "/" + (vertices.length * vertices.length), ",", links.length / vertices.length / vertices.length)
     @decorators.push.apply @decorators, nodes.map (v) =>
-      @paper.circle(v[0]+.5, v[1]+.5, 4).attr {'stroke': 'none', 'fill': 'red', 'fill-opacity': 0.5}
-    @decorators.push @paper.path(links.map(([u, v]) -> "M#{u}L#{v}").join()).attr {'stroke': 'red', 'stroke-width': 1, 'stroke-opacity': 0.5}
+      @paper.circle(v[0]+.5, v[1]+.5, 4).attr {'stroke': 'none', 'fill': 'red', 'fill-opacity': if v.visited then 0.75 else 0.15}
+    @decorators.push @paper.path(links.map(([u, v]) -> "M#{u}L#{v}").join()).attr {'stroke': 'red', 'stroke-width': 1.5, 'stroke-opacity': 0.15}
+    @decorators.toBack()
 
 # Exports
 (exports ? @.proc ?= {}).Path = Path
