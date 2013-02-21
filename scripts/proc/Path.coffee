@@ -57,11 +57,11 @@ class Path
     console.timeEnd("build network")
 
     # anchor start and end nodes
-    entity.Store.each entity.Position, '$sink', (ent, source, sink) =>
+    entity.Store.each entity.Position, entity.Velocity, (ent, position, velocity) =>
       console.time("build path")
-      source = [source[0], source[1]]
+      source = [position[0], position[1]]
       source.neighbours = []
-      sink = [sink[0], sink[1]]
+      sink = [velocity.waypoints[0][0], velocity.waypoints[0][1]]
       sink.neighbours = []
       for u in [source, sink]
         for v in vertices
@@ -115,9 +115,11 @@ class Path
             n.parent = best
             open.push(n) if open.indexOf(n) == -1
       console.timeEnd("build path")
+      velocity.path = []
       n = sink
       while n.parent?
         @decorators.push @paper.path("M#{n}L#{n.parent}").attr {'stroke': 'red', 'stroke-width': 1.5, 'stroke-opacity': 0.75}
+        velocity.path.unshift(n)
         n = n.parent
 
     # draw them

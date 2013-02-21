@@ -17,6 +17,7 @@ store = entity.Store
 # Initialise processes
 drag = new proc.Drag(paper)
 path = new proc.Path(paper)
+sim = new proc.Sim()
 
 # Create entities
 store.templates['actor'] = (pos, sink) ->
@@ -26,7 +27,7 @@ store.templates['actor'] = (pos, sink) ->
               'fill-opacity': 0.1
               'stroke': '#6699ff'
               'stroke-width': 1.5
-  store.from_components new entity.Position(pos), new entity.Repr(el, pos), $sink: new entity.Position(sink)
+  store.from_components new entity.Position(pos), new entity.Repr(el, pos), new entity.Velocity(100.0, [sink])
 
 store.templates['sink'] = (pos) ->
   el = paper.circle(0.5, 0.5, 12)
@@ -55,7 +56,11 @@ store.from_template 'obstacle', [180, 300], [0,0], [200,0], [200,50], [0,50]
 
 drag.on 'update', (ent, offset) ->
   if ent == sink
-    store.get(actor, '$sink').replace(offset)
+    store.get(actor, entity.Velocity).waypoints = [offset]
   path.update()
 
 path.update()
+
+document.getElementById('step').onclick = ->
+  sim.update()
+  path.update()
