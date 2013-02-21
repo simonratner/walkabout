@@ -5,11 +5,7 @@ class Sim
   update: ->
     entity.Store.each entity.Position, entity.Velocity, (ent, position, velocity) =>
       remaining = velocity.v
-      animation = undefined
-      segment = undefined
-      target = entity.Store.get(ent, entity.Repr).el
-      to = (position, t) ->
-        Raphael.animation {transform: 't' + position.toString()}, t, 'linear'
+      path = 'M' + position.toString()
       while remaining > 0 && velocity.path.length > 0
         dist = Geom.dist(position, velocity.path[0])
         if remaining <= dist
@@ -17,18 +13,15 @@ class Sim
           position[1] += (velocity.path[0][1] - position[1]) * remaining/dist
         else
           position.replace(velocity.path.shift())
-        t = @timescale * 1000 * Math.min(remaining, dist) / velocity.v
-        if segment?
-          # Add a continuation to the existing animation
-          do (next = to(position, t)) ->
-            segment.anim[100].callback = -> target.animate(next)
-            segment = next
-        else
-          # First animation step
-          animation = segment = to(position, t)
+        path += 'L' + position.toString()
         remaining -= dist
 
-      target.animate(animation) if animation?
+      t = @timescale * 1000 *
+        if 0 < remaining < velocity.v
+          (velocity.v - remaining) / velocity.v
+        else 1.0
+      target = entity.Store.get(ent, entity.Repr).el
+      target.animateAlong({guide: path}, t, 'linear')
 
 # Exports
 (exports ? @.proc ?= {}).Sim = Sim
