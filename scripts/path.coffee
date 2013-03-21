@@ -1,5 +1,5 @@
 
-paper = Raphael "paper", 501, 501
+paper = Raphael("paper", 500, 500)
 
 message = (text, x = paper.width / 2, y = 40) ->
   el = paper.text(x, y - 10, text).attr({'fill': '#fff', 'font': '12px Consolas'})
