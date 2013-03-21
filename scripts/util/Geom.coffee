@@ -9,6 +9,15 @@ Math.round_to = (x, precision = 0) ->
   scale = [1, 10, 100, 1000, 10000, 100000, 1000000][precision]
   Math.round(x * scale) / scale
 
+# returns a random number between min and max
+Math.random_float = (min, max) ->
+  Math.random() * (max - min) + min
+
+# returns a random integer between min and max, inclusive
+# NB: using Math.round() will give you a non-uniform distribution!
+Math.random_int = (min, max) ->
+  Math.floor(Math.random() * (max - min + 1)) + min
+
 Geom =
   # returns the angle formed by three points, in the range [-pi, pi]
   angle: (a, b, c) ->
