@@ -1,0 +1,15 @@
+{
+  "name": "walkabout",
+  "version": "0.0.1",
+  "engines": {
+    "node": "~0.10.10",
+    "npm": "~1.2.25"
+  },
+  "dependencies": {
+    "mincer": "*",
+    "coffee-script": "*"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
