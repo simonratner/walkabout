@@ -40,24 +40,33 @@ contour = (img, paper) ->
 
   imgdata = ctx.getImageData(0, 0, w, h).data
   data = (x, y) -> imgdata[(x + y * w) * 4]
-  dx = 4
-  dy = 4
+  dx = 8
+  dy = 8
 
-  path = []
-  start = new Date().getTime()
-  for i in [0...2500]
-    x = Math.random_int(dx, w - dx - 1)
-    y = Math.random_int(dy, h - dy - 1)
-    for [x, y] in bands(x, y)
-      gx = (data(x + dx, y) - data(x - dx, y)) / (2 * dx)
-      gy = (data(x, y + dy) - data(x, y - dy)) / (2 * dy)
+  path = paper.set()
+
+  walk = (x, y) ->
+    for d in [1..dx]
+      if x < d or x >= w - d
+        return
+      if y < d or y >= h - d
+        return
+      gx = (data(x + d, y) - data(x - d, y)) / (2 * d)
+      gy = (data(x, y + d) - data(x, y - d)) / (2 * d)
       cx = -gy
       cy = gx
-      path.push "M#{[x - dx*cx/2, y - dy*cy/2]}L#{[x + dx*cx/2, y + dy*cy/2]}"
-    #paper.circle(x, y, 0.5).attr(fill: 'red', stroke: 'red', opacity: 0.25)
-    #paper.path("M#{[x - 5*cx, y - 5*cy]}L#{[x + 5*cx, y + 5*cy]}").attr(fill: 'red', stroke: 'red', opacity: 0.25)
+      path.push(
+        paper.path(
+          "M#{[x - d*cx, y - d*cy]}L#{[x + d*cx, y + d*cy]}"
+        ).attr(fill: 'red', stroke: 'red', opacity: 0.5)
+      )
 
-  end = new Date().getTime()
-  console.log("elapsed: #{end - start}ms")
-
-  paper.path(path.join('')).attr(fill: 'black', stroke: 'black', opacity: 0.25)
+  paper.canvas.addEventListener 'mousemove', (e) ->
+    x = e.offsetX
+    y = e.offsetY
+    path.forEach (el) -> el.remove()
+      #el.remove() if el.node?.tagName.toLowerCase() == 'text'
+    path.push(
+      paper.text(x, y - 15, data(x, y)).attr(fill: 'red', font: '12px Consolas', opacity: 0.5),
+    )
+    walk x, y
